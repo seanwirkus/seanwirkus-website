@@ -1,7 +1,6 @@
 class MitosisStudio extends HTMLElement {
   constructor(){
     super();
-    console.log('MitosisStudio constructor called');
     this._root = this.attachShadow({mode:'open'});
     this._root.innerHTML = `
       <link rel="stylesheet" href="mitosis.css">

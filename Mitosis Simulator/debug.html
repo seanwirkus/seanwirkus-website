@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mitosis Debug Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0a0a0a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .debug-info {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+    .success { background: rgba(0, 255, 0, 0.2); border: 1px solid #00ff00; }
+    .error { background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; }
+  </style>
+</head>
+<body>
+  <div class="debug-info">
+    <h1>🔧 Mitosis Simulator Debug Test</h1>
+    <p>Testing the scope fix for getPhaseProgress method.</p>
+    <div id="status" class="status">Loading...</div>
+  </div>
+  
+  <mitosis-studio></mitosis-studio>
+  
+  <script type="module" src="mitosis.js"></script>
+  <script>
+    // Debug script to check for errors
+    window.addEventListener('error', function(e) {
+      const status = document.getElementById('status');
+      status.className = 'status error';
+      status.innerHTML = `❌ Error: ${e.message}<br>File: ${e.filename}<br>Line: ${e.lineno}`;
+    });
+    
+    // Check if simulator loads successfully
+    setTimeout(() => {
+      const status = document.getElementById('status');
+      const canvas = document.querySelector('mitosis-studio').shadowRoot.querySelector('canvas');
+      if (canvas) {
+        status.className = 'status success';
+        status.innerHTML = '✅ Simulator loaded successfully!<br>Canvas found and ready.';
+      } else {
+        status.className = 'status error';
+        status.innerHTML = '❌ Simulator failed to load properly.';
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

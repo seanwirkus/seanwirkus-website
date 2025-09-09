@@ -1,19 +1,33 @@
 /* Mitosis Studio CSS */
 :host {
-  /* Keep your original colors */
+  /* Enhanced color system with better semantic naming */
   --bg: #0b1220;
   --bg2: #0f172a;
-  --ink: #e5e7eb;
+  --bg3: #1e293b;
+  --ink: #f8fafc;
   --inkDim: #cbd5e1;
-  --glass: rgba(255,255,255,.06);
+  --inkMuted: #94a3b8;
+  --glass: rgba(255,255,255,.08);
+  --glassHover: rgba(255,255,255,.12);
   --accent: #34d399;
   --accent2: #60a5fa;
+  --accent3: #a78bfa;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --border: rgba(255,255,255,.12);
+  --borderHover: rgba(255,255,255,.2);
+  --shadow: rgba(0,0,0,.25);
+  --shadowHover: rgba(0,0,0,.35);
 
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--ink);
   height: 100vh;
   box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
 }
 
 /* Make component span the full page when embedded */
@@ -22,6 +36,10 @@ mitosis-studio{ display:block; width:100vw; height:100vh; }
 /* Main Container */
 .wrap {
   display: grid;
+  grid-template-areas: 
+    "toolbar"
+    "content"
+    "footer";
   grid-template-rows: auto 1fr auto;
   height: 100%;
   background: radial-gradient(900px 600px at 10% -10%, #1f2937 0%, transparent 60%),
@@ -33,17 +51,22 @@ mitosis-studio{ display:block; width:100vw; height:100vh; }
   box-shadow: 0 12px 30px rgba(0,0,0,.35);
   box-sizing: border-box;
   gap: 16px;
+  min-height: 0; /* Prevent grid blowout */
+  overflow: hidden;
 }
 
 /* Top Toolbar */
 .toolbar {
+  grid-area: toolbar;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 12px;
+  padding: 16px;
   background: var(--glass);
-  border-radius: 8px;
-  gap: 12px;
+  border-radius: 12px;
+  gap: 16px;
+  min-height: 60px;
+  backdrop-filter: blur(8px);
 }
 
 .title-group {
@@ -79,7 +102,56 @@ mitosis-studio{ display:block; width:100vw; height:100vh; }
 }
 
 .title{ 
-  font-weight:700 
+  font-weight:700;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+/* Phase Navigation */
+.phase-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.phase-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.phase-nav-btn:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.phase-nav-btn:active {
+  transform: translateY(0);
+}
+
+.current-phase {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ink);
+  min-width: 120px;
+  text-align: center;
+  padding: 8px 12px;
+  background: var(--accent2);
+  color: white;
+  border-radius: 6px;
 }
 
 .chip{ 
@@ -95,80 +167,114 @@ mitosis-studio{ display:block; width:100vw; height:100vh; }
 /* Interactive Elements */
 button, select, input[type="range"] {
   appearance: none;
-  border: 1px solid rgba(255,255,255,.16);
+  border: 1px solid var(--border);
   background: var(--glass);
   color: var(--ink);
   border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   max-width: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover, select:hover {
+  background: var(--glassHover);
+  border-color: var(--borderHover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+button:focus, select:focus, input[type="range"]:focus {
+  outline: 2px solid var(--accent2);
+  outline-offset: 2px;
+  border-color: var(--accent2);
 }
 
 /* Control group layout */
 .control-group {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   width: 100%;
+  margin-bottom: 16px;
 }
 
 .control-group label {
-  font-size: 0.75rem;
-  color: var(--inkDim);
+  font-size: 0.875rem;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .control-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
+  margin-bottom: 8px;
 }
 
 .control-row input[type="range"] {
   flex: 1;
   min-width: 0;
+  height: 6px;
 }
 
 .control-row .value {
-  font-size: 0.75rem;
-  min-width: 48px;
+  font-size: 0.875rem;
+  min-width: 60px;
   text-align: right;
+  color: var(--accent);
+  font-weight: 600;
 }
 
-button:hover, select:hover {
-  background: rgba(255,255,255,.1);
-}
+/* Remove duplicate hover styles */
 
 /* Play button specific styling */
 button#play {
-  font-size: 18px;
-  width: 48px;
-  height: 48px;
+  font-size: 20px;
+  width: 56px;
+  height: 56px;
   display: grid;
   place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+}
+
+button#play:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 211, 153, 0.4);
 }
 
 /* Icon buttons */
 button.icon {
-  width: 36px;
-  height: 36px;
-  padding: 6px;
+  width: 44px;
+  height: 44px;
+  padding: 8px;
   display: grid;
   place-items: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-button#play{ font-size:18px; width:48px; height:48px; }
-
-button.icon{ 
-  width:36px; 
-  height:36px; 
-  display:grid; 
-  place-items:center; 
-  padding:.25rem; 
+button.icon:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
 }
+
+/* Remove duplicate button styles */
 
 /* Status Indicators */
 .pill {
@@ -211,11 +317,13 @@ button.icon{
 
 /* Main Content Layout */
 .content-area {
+  grid-area: content;
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   min-height: 0; /* Prevent grid blowout */
   overflow: hidden;
+  height: 100%;
 }
 
 /* Simulation Stage */
@@ -223,9 +331,13 @@ button.icon{
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid var(--border);
   background: var(--bg2);
-  min-height: 360px;
+  min-height: 500px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 canvas {
@@ -233,6 +345,11 @@ canvas {
   height: 100%;
   display: block;
   background: radial-gradient(420px 300px at 50% 30%, rgba(255,255,255,.06), transparent 60%);
+  min-width: 400px;
+  min-height: 400px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .badges{ 
@@ -263,49 +380,96 @@ canvas {
 
 .phases{ 
   display:grid; 
-  grid-template-columns:repeat(6,1fr); 
-  gap:.35rem; 
+  grid-template-columns:repeat(3,1fr); 
+  gap:8px; 
+  margin-top: 12px;
 }
 
 .phase{ 
   text-align:center; 
-  font-size:.78rem; 
-  padding:.3rem .35rem; 
+  font-size:0.75rem; 
+  padding:8px 6px; 
   border-radius:8px; 
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.04); 
+  border:1px solid var(--border);
+  background:var(--glass); 
   cursor:pointer; 
   user-select:none; 
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.phase:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
 }
 
 .phase.active{ 
-  outline:2px solid var(--accent2); 
-  font-weight:700; 
+  background: var(--accent2);
+  color: white;
+  border-color: var(--accent2);
+  font-weight:600; 
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
 }
 
 /* Control Panels */
 .control-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   height: 100%;
   overflow-y: auto;
-  max-width: 320px; /* Ensure fixed width */
+  width: 100%; /* Take full width of its grid column */
   padding-right: 8px; /* Space for scrollbar */
+  box-sizing: border-box;
+}
+
+/* Main panel - Phase Progress */
+.panel.main-panel {
+  flex: 1;
+  min-height: 200px;
+}
+
+/* Compact panels */
+.panel.compact-panel {
+  min-height: auto;
+  padding: 12px;
+}
+
+.panel.compact-panel .panel-header {
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+}
+
+.panel.compact-panel .panel-body {
+  padding: 0;
 }
 
 .panel {
   background: var(--glass);
-  border: 1px solid rgba(255,255,255,.13);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px;
-  font-size: 0.875rem; /* Slightly smaller font */
+  padding: 20px;
+  font-size: 0.875rem;
   line-height: 1.5;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  box-shadow: 0 4px 16px var(--shadow);
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden; /* Prevent content overflow */
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
 }
+
+/* Collapsible panel support */
+.panel.collapsible { position: relative; }
+.panel .panel-header { display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; }
+.panel .panel-body { transition: max-height .28s ease, opacity .2s ease; overflow:hidden; }
+.panel.collapsed .panel-body { max-height:0; opacity:0; }
+.panel .panel-body.expanded { max-height:1000px; opacity:1; }
+
+/* Remove duplicate focus styles */
+
+/* Improved contrast for pills */
+.pill { background: rgba(255,255,255,0.06); color: var(--ink); }
 
 /* Grid layout for controls */
 .control-grid {
@@ -358,24 +522,95 @@ canvas {
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .content-area {
+    grid-template-columns: 1fr 280px;
+  }
+}
+
 @media (max-width: 1024px) {
   .content-area {
     grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  .stage {
+    min-height: 400px;
+    height: 60vh;
   }
 
   .control-section {
     max-height: none;
+    overflow-y: visible;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    width: 100%;
+    height: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .toolbar {
-    grid-template-columns: 1fr;
+  .wrap {
+    padding: 12px;
     gap: 12px;
   }
 
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .phase-nav {
+    justify-content: center;
+    order: 2;
+  }
+
+  .chip {
+    justify-content: center;
+  }
+
+  .control-section {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
   .panel {
-    padding: 12px;
+    padding: 16px;
+  }
+
+  .stage {
+    min-height: 350px;
+    height: 50vh;
+  }
+
+  .phases {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .current-phase {
+    min-width: 100px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .toolbar {
+    padding: 8px;
+  }
+
+  .panel {
+    padding: 8px;
+  }
+
+  .stage {
+    min-height: 240px;
   }
 }
 
@@ -403,6 +638,316 @@ canvas {
 /* Utilities */
 .grow { flex: 1; }
 .muted { color: var(--inkDim); }
+.full-width { width: 100%; }
+
+/* Enhanced button styles */
+button.full-width {
+  width: 100%;
+  padding: 12px;
+  margin: 4px 0;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+button.full-width:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Range slider enhancements */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: rgba(255,255,255,0.2);
+  height: 6px;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--accent);
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+
+input[type="range"]::-moz-range-track {
+  background: rgba(255,255,255,0.2);
+  height: 6px;
+  border-radius: 3px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  background: var(--accent);
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+/* Panel toggle animations */
+.panel.collapsed .panel-body {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+.panel .panel-body {
+  max-height: 1000px;
+  opacity: 1;
+  transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease, margin 0.3s ease;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--accent);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced visual effects */
+.stage {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  min-height: 360px;
+  box-shadow: 0 8px 32px var(--shadow);
+  transition: box-shadow 0.3s ease;
+}
+
+.stage:hover {
+  box-shadow: 0 12px 48px var(--shadowHover);
+}
+
+/* Improved pill styling */
+.pill {
+  font-size: 0.875rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.pill:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
+}
+
+/* Enhanced panel styling */
+.panel {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  box-shadow: 0 4px 16px var(--shadow);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.panel:hover {
+  box-shadow: 0 6px 24px var(--shadowHover);
+  border-color: var(--borderHover);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, 
+              box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Focus management for better accessibility */
+*:focus {
+  outline: 2px solid var(--accent2);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--accent);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* New UI Elements */
+.current-phase-display {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.phase-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-bottom: 8px;
+}
+
+.phase-description {
+  font-size: 0.875rem;
+  color: var(--inkDim);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: var(--glassHover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Molecular status improvements */
+.molecular-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.status-item:last-child {
+  border-bottom: none;
+}
 
 /* Ensure smooth scrolling */
 * {
@@ -452,6 +997,36 @@ canvas {
   display:none; 
   place-items:center; 
   background:rgba(0,0,0,.35); 
+  z-index: 9999;
+}
+
+.modal.show {
+  display: grid;
+}
+
+.sheet {
+  background: var(--bg2);
+  border-radius: 12px;
+  padding: 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(0,0,0,.4);
+  border: 1px solid var(--border);
+}
+
+.sheet h3 {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.foot {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  justify-content: flex-end;
 }
 
 .modal.show{ 

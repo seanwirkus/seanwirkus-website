@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistical Power Analysis Tool</title>
+  <!-- Plotly & jStat from CDNs -->
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Mobile Menu Toggle -->
+    <button class="btn btn-secondary mobile-menu-toggle" id="mobileMenuToggle" style="display: none;">
+      ☰ Controls
+    </button>
+
+    <div class="left-panel" id="controlsPanel">
+        <div class="control-bar-content">
+          <div class="control-group control-group-flex" id="testTypeBlock" style="margin-bottom:0; min-width:170px;">
+            <label for="testType">Test Type</label>
+            <div class="row-flex">
+              <select id="testType" class="form-control test-type-select">
+                <option value="two_sample">Two-sample t-test</option>
+                <option value="paired">Paired t-test</option>
+                <option value="anova">One-way ANOVA</option>
+                <option value="regression">Linear Regression</option>
+              </select>
+              <label class="checkbox-label" style="margin-left:16px; margin-bottom:0; white-space:nowrap; align-items:center;">
+                <input type="checkbox" id="oneTailed"/> <span style="white-space:nowrap;">One-tailed</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Reset All Button -->
+          <div class="control-group" style="min-width:140px;">
+            <button id="resetAllBtn" class="btn btn-reset" style="width:100%; margin-top:8px;">Reset All</button>
+          </div>
+
+          <!-- Preset Controls -->
+          <div class="control-group" style="min-width:160px;">
+            <label for="presetSelect">Quick Presets</label>
+            <select id="presetSelect" class="form-control test-type-select" style="margin-top:4px;">
+              <option value="">Select a preset...</option>
+              <option value="conservative">Conservative (α=0.01, power=0.9)</option>
+              <option value="standard">Standard (α=0.05, power=0.8)</option>
+              <option value="liberal">Liberal (α=0.1, power=0.7)</option>
+              <option value="small-effect">Small Effect (d=0.2)</option>
+              <option value="medium-effect">Medium Effect (d=0.5)</option>
+              <option value="large-effect">Large Effect (d=0.8)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Modern Sliders Container -->
+        <div class="modern-sliders-container">
+          <!-- n (Sample Size) -->
+          <div class="slider-control">
+            <label for="n" class="slider-label">Sample Size (n)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="n" class="slider" min="2" max="1000" step="1" value="30">
+              <input type="number" id="nInput" class="slider-input" min="2" max="1000" step="1" value="30">
+              <span class="slider-value" id="nValue">30</span>
+            </div>
+            <button class="reset-btn" data-target="n">Reset</button>
+          </div>
+          <!-- alpha (Significance) -->
+          <div class="slider-control">
+            <label for="alpha" class="slider-label">Significance (α)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="alpha" class="slider" min="0.001" max="0.5" step="0.001" value="0.05">
+              <input type="number" id="alphaInput" class="slider-input" min="0.001" max="0.5" step="0.001" value="0.05">
+              <span class="slider-value" id="alphaValue">0.050</span>
+            </div>
+            <button class="reset-btn" data-target="alpha">Reset</button>
+          </div>
+          <!-- Target Power -->
+          <div class="slider-control">
+            <label for="targetPower" class="slider-label">Target Power</label>
+            <div class="slider-wrapper">
+              <input type="range" id="targetPower" class="slider" min="0.1" max="0.99" step="0.01" value="0.8">
+              <input type="number" id="targetPowerInput" class="slider-input" min="0.1" max="0.99" step="0.01" value="0.8">
+              <span class="slider-value" id="targetPowerValue">0.80</span>
+            </div>
+            <button class="reset-btn" data-target="targetPower">Reset</button>
+          </div>
+
+          <!-- Effect Size / Test-specific controls -->
+          <!-- t-test effect size (d) -->
+          <div class="slider-control" id="ttestSettings">
+            <label for="effectSize" class="slider-label">Effect Size (d)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="effectSize" class="slider" min="0.1" max="2" step="0.01" value="0.5">
+              <input type="number" id="effectSizeInput" class="slider-input" min="0.1" max="2" step="0.01" value="0.5">
+              <span class="slider-value" id="effectSizeValue">0.50</span>
+            </div>
+            <button class="reset-btn" data-target="effectSize">Reset</button>
+          </div>
+          <!-- ANOVA: k -->
+          <div class="slider-control" id="anovaSettings" style="display:none;">
+            <label for="k" class="slider-label">Groups (k)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="k" class="slider" min="2" max="20" step="1" value="3">
+              <span class="slider-value" id="kValue">3</span>
+            </div>
+            <button class="reset-btn" data-target="k">Reset</button>
+          </div>
+          <!-- ANOVA: effect size (f) -->
+          <div class="slider-control" id="anovaEffectSize" style="display:none;">
+            <label for="effectSizeAnova" class="slider-label">Effect Size (f)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="effectSizeAnova" class="slider" min="0.1" max="2" step="0.05" value="0.25">
+              <span class="slider-value" id="effectSizeAnovaValue">0.25</span>
+            </div>
+            <button class="reset-btn" data-target="effectSizeAnova">Reset</button>
+          </div>
+          <!-- Regression: predictors -->
+          <div class="slider-control" id="regressionSettings" style="display:none;">
+            <label for="predictors" class="slider-label">Predictors (p)</label>
+            <div class="slider-wrapper">
+              <input type="range" id="predictors" class="slider" min="1" max="50" step="1" value="2">
+              <span class="slider-value" id="predictorsValue">2</span>
+            </div>
+            <button class="reset-btn" data-target="predictors">Reset</button>
+          </div>
+          <!-- Regression: R2 -->
+          <div class="slider-control" id="regressionR2" style="display:none;">
+            <label for="r2" class="slider-label">R²</label>
+            <div class="slider-wrapper">
+              <input type="range" id="r2" class="slider" min="0.01" max="0.99" step="0.01" value="0.2">
+              <span class="slider-value" id="r2Value">0.20</span>
+            </div>
+            <button class="reset-btn" data-target="r2">Reset</button>
+          </div>
+        <!-- Find Required Sample Size Button -->
+        <div class="sample-size-section">
+          <button id="findSampleSize" class="btn btn-primary sample-size-btn">Find Required Sample Size</button>
+          <div id="sampleSizeNotification" class="notification" style="display: none;"></div>
+        </div>
+        </div>
+    </div>
+    <div class="right-panel" id="resultsPanel" style="display: block !important;">
+      <!-- Results + Plots -->
+      <div class="results-container" style="display: block !important;">
+        <div class="dashboard-grid">
+      <div class="results-section dashboard-power-results">
+        <h3>Power Analysis Results</h3>
+        <div id="powerResults" class="results-content" aria-live="polite">
+          <p class="placeholder">Adjust parameters above to see results</p>
+        </div>
+      </div>
+      <div class="dashboard-graphs-stacked">
+        <div class="results-section dashboard-graph">
+          <h3>Test Statistic Distribution</h3>
+          <div id="distributionPlot" class="plot-container"></div>
+        </div>
+        <div class="results-section dashboard-graph">
+          <h3>Power Curve</h3>
+          <div id="powerCurvePlot" class="plot-container"></div>
+        </div>
+        <div class="results-section dashboard-graph">
+          <h3>Sample Data Visualization</h3>
+          <div id="sampleDataPlot" class="plot-container"></div>
+        </div>
+      </div>
+      <div class="results-section dashboard-r-code">
+        <h3>R Code</h3>
+        <div id="rCode" class="code-container">
+          <pre><code id="rCodeContent"># R code will appear here after calculation</code></pre>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button id="copyRCode" class="btn btn-secondary" aria-label="Copy R code to clipboard">Copy Code</button>
+            <button id="exportResults" class="btn btn-secondary" aria-label="Export results as JSON">Export Results</button>
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="guiding-questions"><h3>Instructions</h3>
+      <p>By modifying a single parameter and keeping all other parameters constant, you can infer how that parameter affects power.</p>
+      <h3>Guiding Questions</h3>
+      <ol>
+        <li>What happens to power as sample size increases? Why?</li>
+        <li>What sample size do we need to achieve a power of 0.8 with a standard deviation of 1, a difference in means of 0.5, and an alpha of 0.05?</li>
+        <li>How does sample size change in the above scenario if α = 0.0001? Why?</li>
+        <li>What happens to the required n for 0.80 power if we switch to a one-tailed test? Why don't we always use one-tailed?</li>
+        <li>How does increasing effect size change power? Why is effect size important?</li>
+        <li>How does changing α affect Type I error and power? What trade-offs are involved?</li>
+        <li>Why can paired designs be more powerful than two-sample designs?</li>
+      </ol>
+      <p class="note">Notes: For two-sample tests and ANOVA, <strong>n</strong> is interpreted as the <strong>per-group</strong> sample size. For paired t-tests, <strong>n</strong> is the number of pairs. For regression, <strong>n</strong> is total observations.</p>
+
+      <!-- Developer Information -->
+      <div style="margin-top: 20px; padding: 15px; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border);">
+        <h4 style="margin: 0 0 10px 0; color: var(--text); font-size: 1rem;">About This Tool</h4>
+        <p style="margin: 0 0 8px 0; color: var(--text); font-size: 0.9rem;">
+          <strong>Developed by Sean Wirkus</strong> •
+          <a href="https://seanwirkus.com" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">seanwirkus.com</a>
+        </p>
+        <p style="margin: 0; color: var(--muted); font-size: 0.85rem; line-height: 1.4;">
+          This statistical power analysis tool has been completely redeveloped with modern web technologies, featuring interactive visualizations,
+          real-time calculations, comprehensive test support (t-tests, ANOVA, regression), and an intuitive user interface designed for
+          researchers, students, and data analysts. Built with Plotly.js for stunning visualizations and optimized for both desktop and mobile use.
+        </p>
+        <p style="margin: 8px 0 0 0; color: var(--muted); font-size: 0.8rem;">© 2025 • GNU GPL v3.0 License</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="./statistics.js"></script>
+  <script src="./power-calculations.js"></script>
+  <script src="./plotting.js"></script>
+  <script src="./poweranalysis.js"></script>
+  <script src="./power_test.js"></script>
+</body>
+</html>
+
+

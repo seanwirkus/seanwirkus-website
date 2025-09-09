@@ -1,0 +1,475 @@
+/* Mitosis Studio CSS */
+:host {
+  /* Keep your original colors */
+  --bg: #0b1220;
+  --bg2: #0f172a;
+  --ink: #e5e7eb;
+  --inkDim: #cbd5e1;
+  --glass: rgba(255,255,255,.06);
+  --accent: #34d399;
+  --accent2: #60a5fa;
+
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Make component span the full page when embedded */
+mitosis-studio{ display:block; width:100vw; height:100vh; }
+
+/* Main Container */
+.wrap {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  background: radial-gradient(900px 600px at 10% -10%, #1f2937 0%, transparent 60%),
+              radial-gradient(900px 600px at 110% 10%, #0ea5e9 0%, transparent 50%),
+              linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+  box-sizing: border-box;
+  gap: 16px;
+}
+
+/* Top Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: var(--glass);
+  border-radius: 8px;
+  gap: 12px;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: rgba(255,255,255,.04);
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.1);
+  font-size: 0.8125rem;
+}
+
+.health-status {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.title{ 
+  font-weight:700 
+}
+
+.chip{ 
+  display:inline-flex; 
+  gap:.5rem; 
+  align-items:center; 
+  padding:.35rem .6rem; 
+  border-radius:999px;
+  background:var(--glass); 
+  border:1px solid rgba(255,255,255,.12); 
+}
+
+/* Interactive Elements */
+button, select, input[type="range"] {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.16);
+  background: var(--glass);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Control group layout */
+.control-group {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+}
+
+.control-group label {
+  font-size: 0.75rem;
+  color: var(--inkDim);
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.control-row input[type="range"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.control-row .value {
+  font-size: 0.75rem;
+  min-width: 48px;
+  text-align: right;
+}
+
+button:hover, select:hover {
+  background: rgba(255,255,255,.1);
+}
+
+/* Play button specific styling */
+button#play {
+  font-size: 18px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+
+/* Icon buttons */
+button.icon {
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  display: grid;
+  place-items: center;
+}
+
+button#play{ font-size:18px; width:48px; height:48px; }
+
+button.icon{ 
+  width:36px; 
+  height:36px; 
+  display:grid; 
+  place-items:center; 
+  padding:.25rem; 
+}
+
+/* Status Indicators */
+.pill {
+  font-size: 0.875rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: var(--glass);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badges {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+/* Health Status */
+#health.stable { color: var(--accent); }
+#health.stressed { color: #fbbf24; }
+#health.critical { color: #ef4444; }
+
+.muted{ 
+  color:var(--inkDim); 
+  font-size:1rem;
+  line-height:1.6;
+  letter-spacing:0.01em;
+}
+
+.grid{ 
+  display:grid; 
+  grid-template-columns:1fr 1fr; 
+  gap:.4rem; 
+}
+
+/* Main Content Layout */
+.content-area {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  min-height: 0; /* Prevent grid blowout */
+  overflow: hidden;
+}
+
+/* Simulation Stage */
+.stage {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  background: var(--bg2);
+  min-height: 360px;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: radial-gradient(420px 300px at 50% 30%, rgba(255,255,255,.06), transparent 60%);
+}
+
+.badges{ 
+  position:absolute; 
+  right:18px;
+  bottom:18px;
+  display:flex; 
+  gap:.7rem;
+  z-index:2;
+}
+
+.timeline{ 
+  height:12px;
+  border-radius:999px; 
+  background:rgba(255,255,255,.16); 
+  overflow:hidden; 
+  margin:.7rem 0 1rem; 
+}
+
+.timeline > div{ 
+  height:100%; 
+  width:0%; 
+  background:linear-gradient(90deg, var(--accent), var(--accent2)); 
+}
+
+.progress-container{ display:flex; align-items:center; gap:.7rem; margin-top:.5rem; }
+.progress-label{ font-size:1rem; color:var(--inkDim); }
+
+.phases{ 
+  display:grid; 
+  grid-template-columns:repeat(6,1fr); 
+  gap:.35rem; 
+}
+
+.phase{ 
+  text-align:center; 
+  font-size:.78rem; 
+  padding:.3rem .35rem; 
+  border-radius:8px; 
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04); 
+  cursor:pointer; 
+  user-select:none; 
+}
+
+.phase.active{ 
+  outline:2px solid var(--accent2); 
+  font-weight:700; 
+}
+
+/* Control Panels */
+.control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+  max-width: 320px; /* Ensure fixed width */
+  padding-right: 8px; /* Space for scrollbar */
+}
+
+.panel {
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 0.875rem; /* Slightly smaller font */
+  line-height: 1.5;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent content overflow */
+}
+
+/* Grid layout for controls */
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+/* Molecular status panel */
+.molecular-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* Checkbox container */
+.checkbox-grid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* Ensure panels don't overlap */
+.panel + .panel {
+  margin-top: 0;  /* Use gap from parent instead */
+}
+
+/* Last panel should not be hidden */
+.wrap > .panel:last-of-type {
+  display: block;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .content-area {
+    grid-template-columns: 1fr;
+  }
+
+  .control-section {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+}
+
+/* Keyboard Shortcuts */
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.shortcut-item {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.shortcut-key {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Utilities */
+.grow { flex: 1; }
+.muted { color: var(--inkDim); }
+
+/* Ensure smooth scrolling */
+* {
+  scroll-behavior: smooth;
+  scroll-margin-top: 16px;
+}
+
+.row{ 
+  display:flex; 
+  gap:.5rem; 
+  align-items:center; 
+}
+
+.grow{ 
+  flex:1 1 auto; 
+}
+
+.switch{ 
+  position: relative; 
+  width:44px; 
+  height:26px; 
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.16); 
+  border-radius:999px; 
+  cursor:pointer; 
+}
+
+.dot{ 
+  position:absolute; 
+  top:2px; 
+  left:2px; 
+  width:22px; 
+  height:22px; 
+  border-radius:50%; 
+  background:#fff; 
+  transform:translateX(0); 
+  transition:.2s; 
+}
+
+.on .dot{ 
+  transform:translateX(18px); 
+}
+
+.modal{ 
+  position:fixed; 
+  inset:0; 
+  display:none; 
+  place-items:center; 
+  background:rgba(0,0,0,.35); 
+}
+
+.modal.show{ 
+  display:grid; 
+}
+
+.sheet{ 
+  width:min(620px, 94vw); 
+  background:var(--bg2); 
+  color:var(--ink); 
+  border:1px solid rgba(255,255,255,.16); 
+  border-radius:14px; 
+  padding:1rem; 
+}
+
+.foot{ 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  margin-top:.5rem; 
+}

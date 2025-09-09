@@ -1,0 +1,16 @@
+{
+  "name": "mitosis-simulator",
+  "version": "1.0.0",
+  "description": "Interactive mitosis simulation with debug tools",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9",
+    "eslint": "^8.49.0",
+    "@types/node": "^20.6.2"
+  }
+}

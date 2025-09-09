@@ -84,10 +84,16 @@ class StatisticalFunctions {
 
     // t-distribution inverse
     tInv(p, df) {
-        if (df > 30) {
-            return this.normalInv(p);
+        // Prefer jStat's studentt inverse if available for higher accuracy
+        try {
+            if (typeof jStat !== 'undefined' && jStat.studentt && typeof jStat.studentt.inv === 'function') {
+                return jStat.studentt.inv(p, df);
+            }
+        } catch (e) {
+            // fall through to approximation
         }
 
+        // Use a Cornish-Fisher expansion fallback for moderate df
         const z = this.normalInv(p);
         const g1 = (z * z * z + z) / (4 * df);
         const g2 = (5 * z * z * z * z + 16 * z * z + 3) / (96 * df * df);
@@ -99,10 +105,23 @@ class StatisticalFunctions {
 
     // F-distribution inverse (simplified)
     fInv(p, df1, df2) {
+        // Prefer jStat's F inverse if available
+        try {
+            if (typeof jStat !== 'undefined' && jStat.centralF && typeof jStat.centralF.inv === 'function') {
+                return jStat.centralF.inv(p, df1, df2);
+            }
+            if (typeof jStat !== 'undefined' && jStat.f && typeof jStat.f.inv === 'function') {
+                return jStat.f.inv(p, df1, df2);
+            }
+        } catch (e) {
+            // fall through to approximation
+        }
+
         if (df2 <= 2) return 1;
 
+        // crude log-normal approximation fallback
         const z = this.normalInv(p);
-        const result = Math.exp(2 * z / Math.sqrt(df2));
+        const result = Math.exp(2 * z / Math.sqrt(Math.max(2, df2)));
 
         return Math.max(0.001, Math.min(100, result));
     }
